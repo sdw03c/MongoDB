@@ -1,15 +1,3 @@
-
-{{!-- <div class = "container">
-
-<div class="row">
-  <div class="center col-sm-12">
-
-</div>
-
-</div>
-
-</div> --}}
-
 <div class="jumbotron-backgroundImage">
    <div class="transbox">
    <h1>Mongo Scraper</h1>
@@ -30,7 +18,7 @@
 </div>
 
 {{/each}}
-{{#unless dbArticles.length}}
+{{#unless articles.length}}
 	<div class="alert alert-warning text-center">
     <h4>Uh Oh. Looks like we don't have any new articles.</h4>
     </div>
@@ -39,14 +27,12 @@
   <div class="card-header bg-info text-center spacing"><h4>What would you like to do?</h4>
   </div>
   <div class="card-body text-center spacing">
-    <h5 class="card-title teal-text"><b><a href="/scraped">Try Scrapping New Articles</a></b></h5>
+    <h5 class="card-title teal-text"><b>Try Scrapping New Articles</b></h5>
     <p class="card-text teal-text"><b>Go to Saved Articles</b></p>
   </div>
 </div>
 {{/unless}}
 </div>
-
-
 
 <script src="assets/js/app.js"></script>
  <script>

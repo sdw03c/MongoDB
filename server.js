@@ -8,10 +8,12 @@ app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.set("view engine", "handlebars")
 app.engine("handlebars", handlebars({defaultLayout: "main"}))
+app.use(express.static("public"));
 var PORT = process.env.PORT || 8000
-//var db = require("./models")
+var db = require("./models")
 mongoose.connect("mongodb://localhost/wiredArticles", { useNewUrlParser: true })
 
+app.get("/scraped", function(req, res){
 axios.get("https://www.wired.com/most-popular/").then(function(response){
     var $ = cheerio.load(response.data)
     var results = []
@@ -20,19 +22,98 @@ axios.get("https://www.wired.com/most-popular/").then(function(response){
         var url = $(element).children("a").attr("href")
         var header = $(element).children("a").children("h2").text()
         var summary = $(element).children("a").children("p").text()
+        var scraped = false
+     
     //    console.log(url)
     //     console.log(header)
     //     console.log(summary)
+if(url && header && summary){
 results.push({
-    url: url,
+    url: "https://www.wired.com/" + url,
     header: header, 
-    summary: summary
+    summary: summary,
+    scraped: scraped 
 })
+}
+})
+db.Article.create(results).then(function(dbArticles){
+    res.redirect("/")
+    console.log(dbArticles)
+}).catch(function(err){
+    if (err) throw err
 })
 console.log(results)
+}).catch(function(err){
+    if (err) throw err
+})
+
+})
+
+// axios.get("https://www.wired.com/most-popular/").then(function(response){
+//     var $ = cheerio.load(response.data)
+//     var results = []
+
+//     $("div.archive-item-component__info").each(function(i, element){
+//         var url = $(element).children("a").attr("href")
+//         var header = $(element).children("a").children("h2").text()
+//         var summary = $(element).children("a").children("p").text()
+     
+//     //    console.log(url)
+//     //     console.log(header)
+//     //     console.log(summary)
+// if(url && header && summary ){
+//     var dataToAdd = {
+//         url: "https://www.wired.com/" + url,
+//         header: header, 
+//         summary: summary
+
+//     }
+// results.push(dataToAdd   //scraped: false 
+// )
+// }
+// console.log(results)
+//  db.Article.create(results).then(function(dbArticles){
+//      res.json(dbArticles)
+//      console.log(dbArticles)
+//  }).catch(function(err){
+//      if (err) throw err
+//  })
+// })
+// return results;
+
+// })
+// // .catch(function(err){
+// //     if (err) throw err
+// // })
+
+// })
+
+
+app.get("/clear", function(req, res){
+    db.Article.remove({}).then(function(){
+        res.redirect("/")
+    }).catch(function(err){
+        if (err) throw err
+    })
+    console.log("removed")
 })
 
 
+app.get("/", function(req, res){
+    db.Article.find({scraped:false}).then(function(dbArticles){
+        res.render("index", {dbArticles})
+    }).catch(function(err){
+        if (err) throw err
+    })
+})
+
+app.get("/saved", function(req, res){
+    db.Article.find({scraped:true}).then(function(dbArticles){
+        res.render("saved", {dbArticles})
+    }).catch(function(err){
+        if (err) throw err
+    })
+})
 
 app.listen(PORT, function(){
     console.log(`Server listening on http://localhost: ${PORT}`);
