@@ -36,16 +36,21 @@ results.push({
 })
 }
 })
-db.Article.create(results).then(function(dbArticles){
-    res.redirect("/")
-    console.log(dbArticles)
+db.Article.remove({}).then(function(){
+    db.Article.create(results).then(function(dbArticles){
+        res.redirect("/")
+        console.log(dbArticles)
+    }).catch(function(err){
+        if (err) throw err
+    })
+    console.log(results)
+    }).catch(function(err){
+        if (err) throw err
+    })   
 }).catch(function(err){
     if (err) throw err
 })
-console.log(results)
-}).catch(function(err){
-    if (err) throw err
-})
+console.log("removed")
 
 })
 
@@ -114,6 +119,62 @@ app.get("/saved", function(req, res){
         if (err) throw err
     })
 })
+
+app.put("/saved/:id", function(req, res){
+    var id = req.params.id
+    console.log(id)
+    db.Article.findOneAndUpdate({_id: id }, {scraped:true}).then(function(dbArticles){
+     console.log(dbArticles)
+      res.redirect("/")
+    }).catch(function(err){
+        if (err) throw err
+    })
+})
+
+app.put("/delete/:id", function(req, res){
+    var id = req.params.id
+    db.Article.findOneAndUpdate({_id:id}, {scraped:false}).then(function(dbArticles){
+        console.log(dbArticles)
+         res.redirect("/saved")
+       }).catch(function(err){
+           if (err) throw err
+       })
+
+})
+
+// app.get("/saved/notes/:id", function(req, res){
+//     id = req.params.id
+// db.Article.find({_id:id}).populate("note").then(function(dbArticles){
+//  //console.log(dbArticles.note[1].body + "Sharon Rocks")
+//  res.render("saved", {dbArticles})
+// }).catch(function(err){
+//     if (err) throw err
+// })
+// })
+
+app.get("/saved/notes/:id", function (req, res) { // this for see notes from article id. when client click button to see,
+    // this command takes notes from articles with taken id.
+    id = req.params.id
+    db.Article.find({ _id: id }).populate("note").then(function (dbArticles) {
+    res.json(dbArticles)
+})
+})
+app.post("/saved/notes/:id", function(req, res){
+    id = req.params.id
+   //body = req.body
+    console.log(req.body)
+db.Note.create(req.body).then(function(dbNote){
+    console.log(dbNote)
+ return db.Article.findOneAndUpdate({_id:id}, {$push: {note: dbNote._id}}, {new:true})
+}).then(function(dbArticle){
+    console.log(dbArticle + "here")
+    res.redirect("/saved")
+}).catch(function(err){
+    if (err) throw err
+})
+})
+
+
 
 app.listen(PORT, function(){
     console.log(`Server listening on http://localhost: ${PORT}`);

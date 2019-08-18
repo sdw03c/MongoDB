@@ -9,7 +9,8 @@
 {{#each dbArticles}}
 <div  value={{this._id}} class="card text-white mb-3">
   <div class="card-header bg-info text-center spacing"><h4><a class="a-color" href="{{this.url}}">{{this.header}}</a>
-  <a class = "btn btn-success">Save Articles</a>
+  <button id="remove-article" class = "btn btn-danger" value="{{this._id}}">Remove from Saved</button>
+  <button id="view-note" class = "btn btn-warning" style = "color: white" data-toggle="modal" data-target="#noteModal" value="{{this._id}}">View Article Notes</button>
   </h4>
   </div>
   <div class="card-body text-center spacing">
@@ -17,46 +18,55 @@
   </div>
 </div>
 
+<!-- Modal -->
+
+
+<div id="noteModal" class="bootbox modal fade show in noteModal"  >
+    <div class="modal-dialog">
+        <div class="modal-content container-fluid">
+            <div class="modal-header">
+                <h4 id="modal-title" class="modal-title"></h4>
+                <button class="bootbox-close-button close" aria-hidden="true" type="button" data-dismiss="modal">×</button>
+            </div>
+              <hr><ul id = "notes" class="list-group note-container">
+                {{!-- <li id = "notes" class="list-group-item">No notes for this article yet.</li> --}}
+              {{!-- <li id="test" class="list-group-item"></li> --}}
+                </ul>
+                <hr> <textarea id="new-note" placeholder="New Note" rows="4" cols="60"></textarea>
+           {{!-- {{#each dbArticles}}{{#if dbArticles.length}}<li class="list-group-item">{{this.note}}{{else}}No notes for this article yet.</li>{{/if}}{{/each}}</ul><textarea id="new-note" placeholder="New Note" rows="4" cols="60"></textarea>
+            --}}
+      
+            <div class="modal-footer">
+            <button id="save-note" class="btn btn-success saved">Save Note</button>  
+             </div>
+          </div>
+    </div>
+</div> 
 {{/each}}
-{{#unless articles.length}}
+{{#unless dbArticles.length}}
 	<div class="alert alert-warning text-center">
-    <h4>Uh Oh. Looks like we don't have any new articles.</h4>
+    <h4>Uh Oh. Looks like we don't have any saved articles.</h4>
     </div>
 
 <div class="card text-white mb-3">
   <div class="card-header bg-info text-center spacing"><h4>What would you like to do?</h4>
   </div>
   <div class="card-body text-center spacing">
-    <h5 class="card-title teal-text"><b>Try Scrapping New Articles</b></h5>
-    <p class="card-text teal-text"><b>Go to Saved Articles</b></p>
+   <h5 class="card-title teal-text"><b><a href="/">Browse Articles</a></b></h5>
   </div>
 </div>
 {{/unless}}
 </div>
 
 <script src="assets/js/app.js"></script>
- <script>
-$(".btn-default").on("click", function(){
-  console.log("here")
-//event.preventDefault()
 
-var updateBurger = {
-eatenVariable: 1,
-newBurger: this.value
-}
-console.log(`${updateBurger.newBurger} and ${updateBurger.eatenVariable} `)
-$.ajax("/api/burger/", {
-  type:"PUT",
-  data:updateBurger
-}).then(function(){
-console.log(`Changed to eaten: ${updateBurger} + ${updateBurger.newBurger}`)
-window.location = self.location
-location.reload(true)
-})
-})   
 
-$(document).ajaxStop(function(){
-window.location.reload();
-})
 
- </script>
+
+
+
+
+
+
+
+ 

@@ -2,6 +2,7 @@ var mongoose = require("mongoose")
 var Schema = mongoose.Schema
 
 var ArticleSchema = new Schema({
+scraped: Boolean,
 header: {
     type: String, 
     required: true, 
@@ -17,11 +18,10 @@ summary:{
     required: true, 
   //  unique: true
 },
-scraped: Boolean,
-note: {
+note: [{
     type: Schema.Types.ObjectId, 
     ref: "Note"
-}
+}]
 })
 
 var Article = mongoose.model("Article", ArticleSchema)

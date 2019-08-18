@@ -19,9 +19,9 @@
 <br>
 <div class="container-fluid">
 {{#each dbArticles}}
-<div  value={{this._id}} class="card text-white mb-3">
-  <div class="card-header bg-info text-center spacing"><h4><a class="a-color" href="{{this.url}}">{{this.header}}</a>
-  <a class = "btn btn-success">Save Articles</a>
+<div  value="{{this._id}}" class="card text-white mb-3">
+  <div class="card-header bg-info spacing"><h4><a class="a-color" href="{{this.url}}">{{this.header}}</a>
+  <button id="save-article" class = "btn btn-success" value="{{this._id}}">Save Article</button>
   </h4>
   </div>
   <div class="card-body text-center spacing">
@@ -40,7 +40,7 @@
   </div>
   <div class="card-body text-center spacing">
     <h5 class="card-title teal-text"><b><a href="/scraped">Try Scrapping New Articles</a></b></h5>
-    <p class="card-text teal-text"><b>Go to Saved Articles</b></p>
+    <p class="card-text teal-text"><b><a href="/saved">Go to Saved Articles</a></b></p>
   </div>
 </div>
 {{/unless}}
@@ -49,28 +49,3 @@
 
 
 <script src="assets/js/app.js"></script>
- <script>
-$(".btn-default").on("click", function(){
-  console.log("here")
-//event.preventDefault()
-
-var updateBurger = {
-eatenVariable: 1,
-newBurger: this.value
-}
-console.log(`${updateBurger.newBurger} and ${updateBurger.eatenVariable} `)
-$.ajax("/api/burger/", {
-  type:"PUT",
-  data:updateBurger
-}).then(function(){
-console.log(`Changed to eaten: ${updateBurger} + ${updateBurger.newBurger}`)
-window.location = self.location
-location.reload(true)
-})
-})   
-
-$(document).ajaxStop(function(){
-window.location.reload();
-})
-
- </script>
