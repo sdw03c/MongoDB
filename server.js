@@ -13,7 +13,7 @@ var PORT = process.env.PORT || 8000
 var db = require("./models")
 mongoose.Promise = global.Promise
 //var MONGODB_URI = process.env.MONGODB_URI || "mongodb://wiredDB:SharonLearnsMlab1!@ds311128.mlab.com:11128/heroku_4wlg6bpj"
-mongoose.connect(process.env.MONGODB_URI || "mongodb://wiredDB:SharonLearnsMlab1!@ds311128.mlab.com:11128/heroku_4wlg6bpj", { useMongoClient: true })
+mongoose.connect(process.env.MONGODB_URI || "mongodb://user:password1@ds311128.mlab.com:11128/heroku_4wlg6bpj", { useMongoClient: true })
 //console.log(MONGODB_URI)
 app.get("/scraped", function(req, res){
 axios.get("https://www.wired.com/most-popular/").then(function(response){
