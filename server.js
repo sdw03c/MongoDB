@@ -11,8 +11,9 @@ app.engine("handlebars", handlebars({defaultLayout: "main"}))
 app.use(express.static("public"));
 var PORT = process.env.PORT || 8000
 var db = require("./models")
-mongoose.connect("mongodb://localhost/wiredArticles", { useNewUrlParser: true })
-
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://wiredDB:SharonLearnsMlab1!@ds311128.mlab.com:11128/heroku_4wlg6bpj";
+mongoose.connect(MONGODB_URI, { useMongoClient: true })
+//console.log(MONGODB_URI)
 app.get("/scraped", function(req, res){
 axios.get("https://www.wired.com/most-popular/").then(function(response){
     var $ = cheerio.load(response.data)
