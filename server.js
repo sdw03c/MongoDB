@@ -174,7 +174,16 @@ db.Note.create(req.body).then(function(dbNote){
 })
 })
 
-
+app.delete("/saved/notes/:id", function(req, res){
+  id = req.params.id
+  console.log(id)
+  db.Note.findOneAndRemove({_id:id}).then(function(dbNote){
+    console.log(dbNote + "here")
+    res.redirect("/saved")
+}).catch(function(err){
+    if (err) throw err
+})
+})
 
 app.listen(PORT, function(){
     console.log(`Server listening on http://localhost: ${PORT}`);
